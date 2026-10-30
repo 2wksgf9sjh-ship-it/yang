@@ -1,27 +1,266 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>내 웹사이트</title>
-    <style>
-        body {
-            font-family: 'Apple SD Gothic Neo', sans-serif;
-            background-color: #f4f4f9;
-            text-align: center;
-            padding-top: 100px;
-            color: #333;
-        }
-        h1 {
-            color: #4A90E2;
-        }
-        p {
-            font-size: 18px;
-        }
-    </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>CHARACTER PHONE - 양정원</title>
+<style>
+:root{--blue:#087df1;--paper:#f5f5f7;--ink:#171719;--muted:#8b8b91}
+*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:18px;background:radial-gradient(ellipse at 50% 10%,#e7eaf1,#aeb8c8 58%,#778397);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Apple SD Gothic Neo",sans-serif;color:var(--ink)}
+button,input,textarea{font:inherit}button{cursor:pointer}
+.setup{width:min(430px,100%);background:#fff;border-radius:28px;padding:27px;box-shadow:0 22px 65px #24324a45}
+.logo{font-size:12px;letter-spacing:3px;font-weight:800;color:#85858c}.setup h1{font-size:26px;margin:10px 0 8px}.setup p{font-size:14px;line-height:1.6;color:#777;margin:0 0 20px}
+label{display:block;font-size:13px;font-weight:700;margin:16px 0 7px}
+input,textarea{width:100%;border:1px solid #dddde3;border-radius:12px;padding:13px;background:#fff;outline:none;font-size:15px}
+input:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #087df11a}
+.primary{width:100%;border:0;border-radius:13px;background:#111;color:#fff;padding:14px;font-weight:700;margin-top:19px}
+.smallnote{font-size:11px;color:#999;margin-top:12px;line-height:1.5}
+.phone{display:none;width:min(390px,95vw);height:min(830px,calc(100dvh - 24px));min-height:620px;background:#101010;border:7px solid #171719;border-radius:53px;padding:9px;box-shadow:0 26px 75px #17223875;position:relative}
+.screen{height:100%;border-radius:38px;overflow:hidden;position:relative;background:#f6f6f8}
+.dynamic{position:absolute;z-index:12;top:8px;left:50%;transform:translateX(-50%);width:116px;height:31px;border-radius:20px;background:#050505}
+.status{position:absolute;z-index:11;top:0;left:0;right:0;height:39px;padding:11px 23px 0;display:flex;justify-content:space-between;font-size:12px;font-weight:750;pointer-events:none;color:inherit}
+.view{position:absolute;inset:0;display:none}.view.active{display:block}
+.lock{color:#fff;text-align:center;background:linear-gradient(155deg,#1e293b 0%,#475569 48%,#94a3b8 100%);background-size:cover}
+.lock:before{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#0002,transparent 40%,#0003)}
+.lockdate{position:relative;padding-top:103px;font-size:17px;text-shadow:0 2px 9px #0005}
+.locktime{position:relative;font-size:78px;line-height:1.13;font-weight:300;letter-spacing:-4px;text-shadow:0 2px 12px #0004}
+.lockmessage{position:relative;margin-top:16px;font-size:14px;text-shadow:0 2px 8px #0008}
+.lockbottom{position:absolute;bottom:35px;left:0;right:0;padding:0 31px}
+.quick{display:flex;justify-content:space-between;margin-bottom:25px}.quick button{width:45px;height:45px;border:0;border-radius:50%;background:#ffffff35;color:white;font-size:21px;backdrop-filter:blur(12px)}
+.swipe{font-size:12px;text-shadow:0 2px 8px #000;animation:fade 1.7s infinite}@keyframes fade{50%{opacity:.45}}
+.pass{background:#f5f5f7;text-align:center;padding:102px 24px 24px}
+.pass h2{font-size:21px;margin:0 0 8px}.pass p{font-size:13px;color:#777;margin:0}
+.dots{display:flex;justify-content:center;gap:14px;margin:28px 0 30px}.dot{width:11px;height:11px;border:1.4px solid #555;border-radius:50%}.dot.on{background:#222}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:11px 19px;max-width:270px;margin:auto}
+.key{height:61px;border:0;border-radius:50%;background:#dedee3;color:#171719;font-size:25px;font-weight:400}.key:active{background:#c5c5cb}.key.empty{visibility:hidden}
+.passfoot{display:flex;justify-content:space-between;max-width:270px;margin:18px auto 0;font-size:12px;color:#555}.linkbtn{border:0;background:none;color:var(--blue);padding:0}
+.home{padding:67px 19px 30px;background:linear-gradient(145deg,#a5b4fc,#e0e7ff 58%,#cbd5e1)}
+.greeting{color:#1e293b;text-shadow:0 1px 4px #fff8;font-size:15px;margin:9px 4px 25px;font-weight:600}
+.apps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px 10px}
+.app{border:0;background:none;color:#1e293b;text-shadow:0 1px 2px #fff8;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;min-width:0;font-weight:600}
+.appicon{width:55px;height:55px;border-radius:14px;display:grid;place-items:center;font-size:26px;box-shadow:0 4px 12px #0001;text-shadow:none}
+.kakao{background:#fee500;color:#231f20}.insta{background:radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);color:#fff}.photos{background:conic-gradient(#ff6f91,#ffd36b,#70d6a5,#70b9f0,#ad8af2,#ff6f91)}.messages{background:#35c86c;color:#fff}.phoneapp{background:#35c86c;color:#fff}.notes{background:#fff;color:#d9b333}
+.dock{position:absolute;bottom:20px;left:14px;right:14px;padding:11px 12px;border-radius:23px;background:#ffffff55;backdrop-filter:blur(18px);display:flex;justify-content:space-around}
+.dock .appicon{width:49px;height:49px}
+.appview{background:#fff;padding-top:42px}
+.appbar{height:53px;border-bottom:1px solid #ededf0;display:flex;align-items:center;padding:0 15px;position:relative}
+.back{border:0;background:none;color:var(--blue);font-size:16px;padding:8px 0}.apptitle{position:absolute;left:50%;transform:translateX(-50%);font-weight:700;font-size:16px}
+.content{height:calc(100% - 95px);overflow:auto}
+.rows{padding:0 15px}.chatrow{width:100%;display:flex;align-items:center;gap:12px;padding:14px 0;border:0;border-bottom:1px solid #eee;background:#fff;text-align:left}
+.avatar{width:46px;height:46px;border-radius:50%;background:#e9e9ed;display:grid;place-items:center;font-size:21px;flex:none}
+.chatmeta{flex:1;min-width:0}.chatmeta b{font-size:15px;display:block}.chatmeta span{font-size:12px;color:#888;display:block;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.time{font-size:10px;color:#999}
+.chatroom{height:100%;display:flex;flex-direction:column;background:#bacecf}
+.chatroomtop{height:47px;background:#f8f8f8;display:grid;place-items:center;font-weight:700}
+.bubbles{flex:1;overflow:auto;padding:14px 12px;display:flex;flex-direction:column;gap:10px}
+.day{text-align:center;color:#fff;font-size:11px;margin:7px}
+.bubble{max-width:80%;padding:10px 12px;border-radius:14px;background:#fff;font-size:14px;line-height:1.45;align-self:flex-start;box-shadow:0 1px 2px #0001;overflow-wrap:anywhere}
+.bubble.me{background:#fee500;align-self:flex-end}
+.composer{padding:8px 10px;background:#f7f7f7;border-top:1px solid #ddd;display:flex;gap:8px}
+.composer input{flex:1;border:1px solid #ccc;border-radius:18px;padding:8px 12px;font-size:14px}
+.composer button{border:0;background:#fee500;color:#231f20;font-weight:bold;border-radius:14px;padding:0 14px}
+.callrow{padding:14px 17px;border-bottom:1px solid #eee;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);height:4px;width:125px;background:#111;border-radius:5px;z-index:15;cursor:pointer}
+.toast{display:none;position:absolute;z-index:30;bottom:68px;left:50%;transform:translateX(-50%);background:#222;color:#fff;padding:10px 15px;border-radius:18px;font-size:12px;white-space:nowrap}
+/* Instagram UI */
+.insta-profile{padding:15px;border-bottom:1px solid #eee}
+.insta-header{display:flex;align-items:center;gap:20px;margin-bottom:12px}
+.insta-avatar{width:70px;height:70px;border-radius:50%;background:#ddd;display:grid;place-items:center;font-size:35px}
+.insta-stats{display:flex;gap:15px;text-align:center;flex:1;justify-content:space-around}
+.insta-stats div b{display:block;font-size:15px}.insta-stats div span{font-size:11px;color:#666}
+.insta-bio{font-size:13px;line-height:1.4}
+.insta-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-top:15px}
+.insta-item{aspect-ratio:1;background:#f0f0f0;display:grid;place-items:center;font-size:30px}
+</style>
 </head>
 <body>
-    <h1>환영합니다! 🎉</h1>
-    <p>여기에 내가 원하는 내용을 자유롭게 적을 수 있어요.</p>
+
+<section class="setup" id="setup">
+ <div class="logo">CHARACTER PHONE</div>
+ <h1>양정원의 휴대폰 접속</h1>
+ <p>대학교 과대 21살 양정원의 스마트폰에 접속합니다. 아래 정보를 확인 후 열기를 눌러주세요.</p>
+ <label for="name">캐릭터 이름</label><input id="name" value="양정원" readonly>
+ <label for="code">잠금 암호 (숫자 4자리)</label><input id="code" inputmode="numeric" maxlength="6" value="1004">
+ <label for="wall">잠금 화면 문구</label><input id="wall" value="박여주 ❤️">
+ <button class="primary" onclick="begin()">휴대폰 열기</button>
+</section>
+
+<main class="phone" id="phone"><div class="screen">
+ <div class="dynamic"></div><div class="status"><span id="statusTime">12:00</span><span>●●● ▰</span></div>
+ <section class="view lock active" id="lock"><div class="lockdate" id="date"></div><div class="locktime" id="clock"></div><div class="lockmessage" id="lockmsg"></div><div class="lockbottom"><div class="quick"><button onclick="toast('손전등')">⌁</button><button onclick="toast('카메라')">◎</button></div><div class="swipe">위로 쓸어올려 잠금 해제</div></div></section>
+ <section class="view pass" id="pass"><h2 id="passTitle">암호 입력</h2><p>iPhone을 잠금 해제하려면 암호를 입력하세요.</p><div class="dots" id="dots"></div><div class="keypad" id="keys"></div><div class="passfoot"><span>긴급통화</span><button class="linkbtn" onclick="erase()">지우기</button></div></section>
+ <section class="view home" id="home"><div class="greeting" id="greeting">양정원의 iPhone</div><div class="apps">
+ <button class="app" onclick="openApp('kakao')"><span class="appicon kakao">💬</span>카카오톡</button>
+ <button class="app" onclick="openApp('instagram')"><span class="appicon insta">📸</span>인스타그램</button>
+ <button class="app" onclick="openApp('calls')"><span class="appicon phoneapp">☎</span>전화</button>
+ <button class="app" onclick="openApp('notes')"><span class="appicon notes">📝</span>메모장</button></div>
+ <div class="dock"><button class="app" onclick="openApp('calls')"><span class="appicon phoneapp">☎</span></button><button class="app" onclick="openApp('kakao')"><span class="appicon kakao">💬</span></button><button class="app" onclick="openApp('instagram')"><span class="appicon insta">📸</span></button></div></section>
+ <section class="view appview" id="appview"><div class="appbar"><button class="back" onclick="home()">‹ 홈</button><span class="apptitle" id="appTitle"></span></div><div class="content" id="content"></div></section>
+ <div class="toast" id="toast"></div><div class="homebar" onclick="home()"></div>
+</div></main>
+
+<script>
+let person='양정원',secret='1004',entered='',wallpaper='박여주 ❤️';
+
+// 카카오톡 박종성 대화 흐름
+let jongseongChat = [
+    {sender: '박종성', text: '여주랑 헤어졌어? 여주 다른 애랑 밥 같이 먹던데'}
+];
+
+const $=id=>document.getElementById(id);
+function begin(){
+    $('setup').style.display='none';$('phone').style.display='block';
+    $('lockmsg').textContent=wallpaper;$('greeting').textContent=person+'의 iPhone';
+    $('passTitle').textContent=person+'님의 iPhone 암호';dateTime();show('lock')
+}
+function show(id){document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));$(id).classList.add('active')}
+function dateTime(){let d=new Date(),t=d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');$('clock').textContent=t;$('statusTime').textContent=t;$('date').textContent=(d.getMonth()+1)+'월 '+d.getDate()+'일 '+['일요일','월요일','화요일','수요일','목요일','금요일','토요일'][d.getDay()]}
+setInterval(dateTime,30000);dateTime();
+
+let startY=0;$('lock').addEventListener('touchstart',e=>startY=e.touches[0].clientY);$('lock').addEventListener('touchend',e=>{if(startY-e.changedTouches[0].clientY>30)unlock()});$('lock').addEventListener('click',unlock);
+function unlock(){entered='';drawDots();show('pass')}
+function drawDots(){let d=$('dots');d.innerHTML='';for(let i=0;i<secret.length;i++){let x=document.createElement('i');x.className='dot'+(i<entered.length?' on':'');d.append(x)}}
+function erase(){entered='';drawDots()}
+function key(k){if(k==='del'){entered=entered.slice(0,-1);drawDots();return}if(entered.length>=secret.length)return;entered+=k;drawDots();if(entered.length===secret.length){if(entered===secret)setTimeout(()=>show('home'),170);else setTimeout(()=>{alert('암호가 올바르지 않습니다.');erase()},120)}}
+(function(){['1','2','3','4','5','6','7','8','9','','0','del'].forEach(k=>{let b=document.createElement('button');b.className='key'+(!k?' empty':'');b.textContent=k==='del'?'⌫':k;if(k)b.onclick=()=>key(k);$('keys').append(b)})})();
+function home(){show('home')}
+function toast(s){let t=$('toast');t.textContent=s;t.style.display='block';setTimeout(()=>t.style.display='none',1300)}
+
+function row(icon,name,msg,time,fn){return `<button class="chatrow" onclick="${fn}"><span class="avatar">${icon}</span><span class="chatmeta"><b>${name}</b><span>${msg}</span></span><span class="time">${time}</span></button>`}
+
+function openApp(which){
+    show('appview');let title='',body='';
+    if(which==='kakao'){
+        title='카카오톡';
+        let lastMsg = jongseongChat[jongseongChat.length-1].text;
+        body=`<div class="rows">
+            ${row('🦅','박종성 선배', lastMsg, '방금', "openChat('박종성')")}
+            ${row('🦊','김선우', '정원아 오늘 과모임 장소 어디야?', '오후 2:15', "openChat('김선우')")}
+            ${row('❤️','박여주', '우리 헤어져.', '어제', "openChat('박여주')")}
+        </div>`;
+    }
+    if(which==='instagram'){
+        title='Instagram';
+        body=`
+            <div class="insta-profile">
+                <div class="insta-header">
+                    <div class="insta-avatar">🐱</div>
+                    <div class="insta-stats">
+                        <div><b>1</b><span>게시물</span></div>
+                        <div><b>210</b><span>팔로워</span></div>
+                        <div><b>3</b><span>팔로잉</span></div>
+                    </div>
+                </div>
+                <div class="insta-bio">
+                    <b>양정원</b><br>
+                    21 | 대학교 과대 🐱<br>
+                    <span style="color:#00376b; font-size:12px;">팔로잉: 박여주, 김선우, 박종성</span>
+                </div>
+                <div class="insta-grid">
+                    <div class="insta-item">👦🏻</div>
+                </div>
+            </div>
+        `;
+    }
+    if(which==='calls'){
+        title='최근 통화';
+        body=`
+            <div class="callrow" style="color:#e11d48;">
+                <div><b>❤️ 박여주</b><br><span style="font-size:11px; color:#888;">휴대폰</span></div>
+                <span style="font-size:12px;">수신 취소 (3)</span>
+            </div>
+            <div class="callrow" style="color:#e11d48;">
+                <div><b>❤️ 박여주</b><br><span style="font-size:11px; color:#888;">휴대폰</span></div>
+                <span style="font-size:12px;">부재중 전화</span>
+            </div>
+            <div class="callrow">
+                <div><b>🦅 박종성 선배</b><br><span style="font-size:11px; color:#888;">휴대폰</span></div>
+                <span style="font-size:12px; color:#888;">발신 통화 · 2분</span>
+            </div>
+            <div class="callrow">
+                <div><b>🦊 김선우</b><br><span style="font-size:11px; color:#888;">휴대폰</span></div>
+                <span style="font-size:12px; color:#888;">수신 통화 · 5분</span>
+            </div>
+        `;
+    }
+    if(which==='notes'){
+        title='메모';
+        body=`<div style="padding:20px; line-height:1.7;">
+            <h3>과대 공지사항 체크</h3>
+            <p>• 다음 주 학과 총회 장소 예약하기<br>• 선우랑 교교 과제 자료 조사하기<br>• 여주가 좋아하는 카페 예약...</p>
+        </div>`;
+    }
+    $('appTitle').textContent=title;$('content').innerHTML=body;
+}
+
+function openChat(name){
+    $('appTitle').textContent=name;
+    renderChat(name);
+}
+
+function renderChat(name){
+    if(name === '박종성'){
+        let bubblesHtml = jongseongChat.map(c => 
+            `<div class="bubble ${c.sender === '나' ? 'me' : ''}">${escapeHtml(c.text)}</div>`
+        ).join('');
+        
+        $('content').innerHTML = `
+            <div class="chatroom">
+                <div class="chatroomtop">${name}</div>
+                <div class="bubbles" id="chatBubbles">${bubblesHtml}</div>
+                <div class="composer">
+                    <input type="text" id="msgInput" placeholder="메시지 입력..." onkeypress="if(event.key==='Enter') sendMsg()">
+                    <button onclick="sendMsg()">전송</button>
+                </div>
+            </div>
+        `;
+        let b = $('chatBubbles'); b.scrollTop = b.scrollHeight;
+    } else if(name === '박여주'){
+        $('content').innerHTML = `
+            <div class="chatroom">
+                <div class="chatroomtop">${name}</div>
+                <div class="bubbles">
+                    <div class="bubble">우리 헤어져.</div>
+                    <div class="bubble me">여주야 잠시만 내 말 좀 들어줘</div>
+                    <div class="bubble me">전화 좀 받아주라 제발</div>
+                </div>
+                <div class="composer"><input type="text" placeholder="전송할 수 없습니다." disabled></div>
+            </div>
+        `;
+    } else {
+        $('content').innerHTML = `
+            <div class="chatroom">
+                <div class="chatroomtop">${name}</div>
+                <div class="bubbles">
+                    <div class="bubble">정원아 과모임 장소 정해졌어?</div>
+                </div>
+                <div class="composer"><input type="text" placeholder="메시지 입력..."></div>
+            </div>
+        `;
+    }
+}
+
+function sendMsg(){
+    let input = $('msgInput');
+    if(!input || !input.value.trim()) return;
+    let text = input.value.trim();
+    
+    jongseongChat.push({sender: '나', text: text});
+    renderChat('박종성');
+    
+    // 지정된 답장("아니요 그냥 싸웠어요")일 때 박종성의 답장 처리
+    if(text.replaceAll(' ', '') === '아니요그냥싸웠어요'){
+        setTimeout(() => {
+            jongseongChat.push({sender: '박종성', text: '아 그렇지?ㅋㅋㅋ 싸우지 마라'});
+            renderChat('박종성');
+        }, 1000);
+    }
+}
+
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+</script>
 </body>
 </html>
+
+
